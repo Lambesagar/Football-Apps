@@ -3,18 +3,18 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { leagueList } from '../mock-leagues';
 import { FixtureObject, StandingObject,  leaguesMenu } from '../model/football.model';
+import { environment } from 'src/environments/environment'
 @Injectable({ providedIn: 'root' })
 export class FootBallService {
+  private apiKey = '6440392d5e93461c956f2cebb78a0767'; 
+  private apiUrl = environment.apiFootballUrl;
   lastgames: number = 10;
   private idTeams: number = 40;
   currentYear: Date | number;
   private idleague: number;
   public idlTeamChanged$: EventEmitter<number>;
   public idleagueChanged$: EventEmitter<number>;
-  headers = new HttpHeaders({
-    'x-rapidapi-host': 'v3.football.api-sports.io',
-    'x-rapidapi-key': '6440392d5e93461c956f2cebb78a0767'
-  });
+
 
   constructor(private http: HttpClient) {
     this.currentYear = (new Date()).getFullYear();
@@ -35,16 +35,32 @@ export class FootBallService {
     this.idlTeamChanged$.emit(teamId)
   }
 
+
+  // Example: Get a list of football leagues
   getFootballData(): Observable<StandingObject> {
-    return this.http.get<StandingObject>(`https://v3.football.api-sports.io/standings?league=${this.idleague}&season=${this.currentYear}`, { headers: this.headers });
+    const headers = new HttpHeaders({
+      'x-rapidapi-key': this.apiKey
+    });
+    return this.http.get<StandingObject>(`${this.apiUrl}standings?league=${this.idleague}&season=${this.currentYear}`, { headers });
   }
+
+  // getFootballData(): Observable<StandingObject> {
+  //   return this.http.get<StandingObject>(environment.apiFootballUrl+`/standings?league=${this.idleague}&season=${this.currentYear}`, {headers: this.headers});
+  // }
 
   getCountryList(): leaguesMenu[] {
     return leagueList;
   }
 
   getGamesResult(): Observable<FixtureObject> {
-    return this.http.get<FixtureObject>(`https://v3.football.api-sports.io/fixtures?league=${this.idleague}&season=${this.currentYear}&team=${this.idTeams}&last=${this.lastgames}`, { headers: this.headers });
+    const headers = new HttpHeaders({
+      'x-rapidapi-key': this.apiKey
+    });
+    return this.http.get<FixtureObject>(`${this.apiUrl}fixtures?league=${this.idleague}&season=${this.currentYear}&team=${this.idTeams}&last=${this.lastgames}`, { headers });
   }
+
+  // getGamesResult(): Observable<FixtureObject> {
+  //   return this.http.get<FixtureObject>(environment.apiFootballUrl+`/fixtures?league=${this.idleague}&season=${this.currentYear}&team=${this.idTeams}&last=${this.lastgames}`, { headers: this.headers });
+  // }
 
 }
