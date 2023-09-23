@@ -44,9 +44,7 @@ export class FootBallService {
     return this.http.get<StandingObject>(`${this.apiUrl}standings?league=${this.idleague}&season=${this.currentYear}`, { headers });
   }
 
-  // getFootballData(): Observable<StandingObject> {
-  //   return this.http.get<StandingObject>(environment.apiFootballUrl+`/standings?league=${this.idleague}&season=${this.currentYear}`, {headers: this.headers});
-  // }
+ 
 
   getCountryList(): leaguesMenu[] {
     return leagueList;
