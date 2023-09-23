@@ -15,7 +15,6 @@ export class FootBallService {
   public idlTeamChanged$: EventEmitter<number>;
   public idleagueChanged$: EventEmitter<number>;
 
-
   constructor(private http: HttpClient) {
     this.currentYear = (new Date()).getFullYear();
     this.idleague = 39;
@@ -35,19 +34,15 @@ export class FootBallService {
     this.idlTeamChanged$.emit(teamId)
   }
 
+  getCountryList(): leaguesMenu[] {
+    return leagueList;
+  }  
 
-  // Example: Get a list of football leagues
   getFootballData(): Observable<StandingObject> {
     const headers = new HttpHeaders({
       'x-rapidapi-key': this.apiKey
     });
     return this.http.get<StandingObject>(`${this.apiUrl}standings?league=${this.idleague}&season=${this.currentYear}`, { headers });
-  }
-
- 
-
-  getCountryList(): leaguesMenu[] {
-    return leagueList;
   }
 
   getGamesResult(): Observable<FixtureObject> {
@@ -56,9 +51,5 @@ export class FootBallService {
     });
     return this.http.get<FixtureObject>(`${this.apiUrl}fixtures?league=${this.idleague}&season=${this.currentYear}&team=${this.idTeams}&last=${this.lastgames}`, { headers });
   }
-
-  // getGamesResult(): Observable<FixtureObject> {
-  //   return this.http.get<FixtureObject>(environment.apiFootballUrl+`/fixtures?league=${this.idleague}&season=${this.currentYear}&team=${this.idTeams}&last=${this.lastgames}`, { headers: this.headers });
-  // }
 
 }
